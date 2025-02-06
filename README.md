@@ -77,7 +77,7 @@ For other plugin manager, call the setup function
 
 | Command           | Description                                                           |
 | ----------------- | --------------------------------------------------------------------- |
-| `:Session`        | Shows information about the current session and the `Session` command |
+| `:Session info`   | Shows information about the current session and the `Session` command |
 | `:Session save`   | Saves the current session for the current working directory           |
 | `:Session load`   | Loads the session for the current working directory                   |
 | `:Session delete` | Deletes the session for the current working directory                 |

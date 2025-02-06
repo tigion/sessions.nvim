@@ -1,5 +1,6 @@
 -- local config = require('sessions.config')
 local session = require('sessions.session')
+local notify = require('sessions.notify')
 
 local M = {}
 
@@ -8,8 +9,7 @@ local M = {}
 function M.setup(opts)
   -- check neovim version
   if vim.fn.has('nvim-0.10') == 0 then
-    local msg = 'nvim-sessions requires Neovim >= 0.10'
-    vim.notify(msg, vim.log.levels.ERROR, { title = 'nvim-session' })
+    notify.error('nvim-sessions requires Neovim >= 0.10')
     return
   end
 
@@ -22,7 +22,7 @@ function M.setup(opts)
   --       - https://tui.ninja/neovim/customizing/user_commands/creating/
   --
   vim.api.nvim_create_user_command('Session', function(input)
-    if input.args == '' then
+    if input.args == 'info' then
       session.info()
     elseif input.args == 'save' then
       session.save()
@@ -31,17 +31,17 @@ function M.setup(opts)
     elseif input.args == 'delete' then
       session.delete()
     else
-      vim.notify('Usage: :Session [save|load|delete]')
+      session.usage()
     end
   end, {
     nargs = '?',
     complete = function(ArgLead)
-      local choices = { 'save', 'load', 'delete' }
+      local choices = { 'info', 'save', 'load', 'delete' }
       table.sort(choices)
       if ArgLead == '' then return choices end
       return vim.tbl_filter(function(choice) return string.find(choice, ArgLead) == 1 end, choices)
     end,
-    desc = 'Session [save|load|delete]',
+    desc = 'Session info|save|load|delete',
   })
 end
 

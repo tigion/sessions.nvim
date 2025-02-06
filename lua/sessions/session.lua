@@ -1,5 +1,11 @@
 local config = require('sessions.config').config
+local notify = require('sessions.notify')
 local util = require('sessions.util')
+
+local text = {
+  usage = 'Usage: `:Session info|save|load|delete`',
+  health = 'Run `:checkhealth sessions` to check the health of the plugin.',
+}
 
 local M = {}
 
@@ -31,7 +37,7 @@ function M.save()
       and not vim.fn.mkdir(dir, 'p') -- couldn't create
     or vim.fn.filewritable(dir) ~= 2 -- isn't writable
   then
-    util.notify_warn('Failed to create session')
+    notify.error('Failed to create session\n' .. text.health)
     return
   end
 
@@ -40,7 +46,7 @@ function M.save()
     -- vim.fn.input / vim.ui.input / vim.ui.select
     local input = vim.fn.input('Overwrite existing session? (y/n): ')
     if input ~= 'y' then
-      util.notify('No session is saved')
+      notify.info('No session is saved')
       return
     end
   end
@@ -61,9 +67,9 @@ function M.save()
   -- local ok, error = xpcall(function() vim.cmd('mksession ' .. session_filepath) end, debug.traceback)
   local ok, error = pcall(function() vim.cmd('mksession! ' .. filepath) end)
   if ok then
-    util.notify('Session saved')
+    notify.info('Session saved')
   else
-    vim.notify(error or 'mksession: Failed to save session', vim.log.levels.ERROR)
+    notify.error('mksession: ' .. (error or 'Failed to save session') .. '\n' .. text.health)
   end
 
   -- restore vim.opt.sessionoptions
@@ -74,33 +80,34 @@ end
 function M.load()
   local filepath = M.filepath()
   if not M.exists() then
-    util.notify('No session to load')
+    notify.info('No session to load')
     return
   end
 
   -- load session
   vim.cmd('source ' .. filepath)
+  notify.info('Session loaded')
 end
 
 ---Deletes the session for the current working directory.
 function M.delete()
   if not M.exists() then
-    util.notify('No session to delete')
+    notify.info('No session to delete')
     return
   end
 
   local filepath = M.filepath()
   if vim.fn.delete(filepath) == 0 then
-    util.notify('Session deleted')
+    notify.info('Session deleted')
   else
-    util.notify_warn('Failed to delete session')
+    notify.error('Failed to delete session\n' .. text.health)
   end
 end
 
 ---Shows infos about the session for the current working directory and the usage.
-function M.info()
-  vim.notify(M.exists() and 'A' or 'No' .. ' saved session exists.')
-  vim.notify('Usage: :Session [save|load|delete]')
-end
+function M.info() notify.info((M.exists() and 'A' or 'No') .. ' saved session exists.' .. text.usage) end
+
+---Shows the usage.
+function M.usage() notify.warn(text.usage) end
 
 return M
