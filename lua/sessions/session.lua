@@ -1,4 +1,4 @@
-local config = require('sessions.config').config
+local config = require('sessions.config')
 local notify = require('sessions.notify')
 local util = require('sessions.util')
 
@@ -11,7 +11,7 @@ local M = {}
 
 ---Returns the global directory path where session files are stored.
 ---@return string
-function M.directory() return vim.fn.stdpath('data') .. '/' .. config.directory end
+function M.directory() return vim.fn.stdpath('data') .. '/' .. config.options.directory end
 
 ---Returns the filename of the session for the current working directory.
 ---@return string
@@ -42,7 +42,7 @@ function M.save()
   end
 
   -- check if session file exists
-  if not config.overwrite and M.exists() then
+  if not config.options.overwrite and M.exists() then
     -- vim.fn.input / vim.ui.input / vim.ui.select
     local input = vim.fn.input('Overwrite existing session? (y/n): ')
     if input ~= 'y' then
