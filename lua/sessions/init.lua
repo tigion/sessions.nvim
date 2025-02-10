@@ -1,4 +1,4 @@
--- local config = require('sessions.config')
+local config = require('sessions.config')
 local session = require('sessions.session')
 local notify = require('sessions.notify')
 
@@ -13,10 +13,10 @@ function M.setup(opts)
     return
   end
 
-  -- setup config
+  -- Setups the config.
   require('sessions.config').setup(opts)
 
-  -- create `Session` command
+  -- Creates the `Session` command.
   --
   -- NOTE: - `:h nvim_create_user_command`
   --       - https://tui.ninja/neovim/customizing/user_commands/creating/
@@ -43,6 +43,17 @@ function M.setup(opts)
     end,
     desc = 'Session info|save|load|delete',
   })
+
+  local group = vim.api.nvim_create_augroup('nvim-sessions_group', {})
+
+  -- Creates autocommand to save session on Neovim exit if auto_save is enabled.
+  if config.options.auto_save == true then
+    vim.api.nvim_create_autocmd('VimLeavePre', {
+      group = group,
+      -- pattern = '*',
+      callback = function() session.save() end,
+    })
+  end
 end
 
 M.exists = session.exists

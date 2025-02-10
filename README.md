@@ -45,6 +45,7 @@ Other better plugins are:
 ```lua
 return {
   'tigion/nvim-sessions',
+  event = 'VeryLazy',
   cmd = 'Session',
   keys = {
     { '<Leader>ws', '<Cmd>Session save<CR>', desc = 'Save session (cwd)' },
@@ -60,6 +61,12 @@ The default options are:
 
 ```lua
 {
+  -- Saves session automatically on Neovim exit.
+  auto_save = false, ---@type boolean
+
+  -- Notifies the user when a session is loaded or saved.
+  notify = true, ---@type boolean
+
   -- The name of the subdirectory in `vim.fn.stdpath('data')`
   -- where the sessions are saved.
   -- If it does not exist, it will be created.
@@ -67,6 +74,9 @@ The default options are:
 
   -- Overwrites existing session files without confirmation.
   overwrite = true, ---@type boolean
+
+  -- Ignores session saving for the specified filetypes.
+  ignored_filetypes = { 'alpha', 'dashboard', 'snacks_dashboard' }, ---@type string[]
 }
 ```
 
@@ -75,12 +85,15 @@ For other plugin manager, call the setup function
 
 ## Usage
 
-| Command           | Description                                                           |
-| ----------------- | --------------------------------------------------------------------- |
-| `:Session info`   | Shows information about the current session and the `Session` command |
-| `:Session save`   | Saves the current session for the current working directory           |
-| `:Session load`   | Loads the session for the current working directory                   |
-| `:Session delete` | Deletes the session for the current working directory                 |
+| Command           | Description                                                            |
+| ----------------- | ---------------------------------------------------------------------- |
+| `:Session info`   | Shows information about the current session and the `Session` command. |
+| `:Session save`   | Saves the current session for the current working directory.           |
+| `:Session load`   | Loads the session for the current working directory.                   |
+| `:Session delete` | Deletes the session for the current working directory.                 |
+
+With `require('sessions').exists()` you can check if a session exists for the
+current working directory.
 
 Run `:checkhealth sessions` to check the health of the plugin.
 
