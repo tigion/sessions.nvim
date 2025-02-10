@@ -99,5 +99,7 @@ Run `:checkhealth sessions` to check the health of the plugin.
 
 ## TODO
 
+- [ ] Add lua comment [annotations](https://luals.github.io/wiki/annotations/).
+- [x] Add auto save.
+- [x] Update readme.
 - [x] Move simple session management from tigion.core.util.session to a plugin.
-- [x] Update readme
