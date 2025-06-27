@@ -6,6 +6,8 @@ local M = {}
 
 -- M.setup = config.setup
 -- M.setup = require('sessions.config').setup
+
+---@param opts sessions.Config
 function M.setup(opts)
   -- check neovim version
   if vim.fn.has('nvim-0.10') == 0 then

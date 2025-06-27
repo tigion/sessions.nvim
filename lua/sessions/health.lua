@@ -54,7 +54,7 @@ local function info_sessions()
   local expr = '*.session.vim'
 
   -- get count of session files
-  local session_files = vim.fn.globpath(session_dir, expr, true, 1)
+  local session_files = vim.fn.globpath(session_dir, expr, true, true)
   local count = #session_files
   info('Session files: ' .. count)
 end

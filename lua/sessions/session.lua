@@ -7,6 +7,7 @@ local text = {
   health = 'Run `:checkhealth sessions` to check the health of the plugin.',
 }
 
+---@class sessions.session
 local M = {}
 
 ---Returns the global directory path where session files are stored.
@@ -21,12 +22,15 @@ function M.filename()
 end
 
 ---Returns the full path of the session file for the current working directory.
+---@return string
 function M.filepath() return M.directory() .. '/' .. M.filename() end
 
 ---Checks if the session file for the current working directory exists.
+---@return boolean
 function M.exists() return vim.fn.filereadable(M.filepath()) == 1 and true or false end
 
 ---Checks if a file type is in the ignore list.
+---@return boolean
 local function is_ignored_filetype()
   local filetypes = util.get_window_filetypes()
   for _, ft in ipairs(filetypes) do
