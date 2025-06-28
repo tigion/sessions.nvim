@@ -60,23 +60,21 @@ return {
 The default options are:
 
 ```lua
-{
-  -- Saves session automatically on Neovim exit.
-  auto_save = false, ---@type boolean
+---@class sessions.Config
+---@field auto_save? boolean Automatically saves the session on Neovim exit.
+---@field directory? string The subdirectory in `vim.fn.stdpath('data')` where the sessions are saved.
+---@field ignored_filetypes? string[] Ignores session saving for the specified filetypes.
+---@field notify? boolean Notifies when a session is loaded or saved.
+---@field overwrite? boolean Overwrites existing session files without confirmation.
 
-  -- Notifies the user when a session is loaded or saved.
-  notify = true, ---@type boolean
-
-  -- The name of the subdirectory in `vim.fn.stdpath('data')`
-  -- where the sessions are saved.
-  -- If it does not exist, it will be created.
-  directory = 'sessions', ---@type string
-
-  -- Overwrites existing session files without confirmation.
-  overwrite = true, ---@type boolean
-
-  -- Ignores session saving for the specified filetypes.
-  ignored_filetypes = { 'alpha', 'dashboard', 'snacks_dashboard' }, ---@type string[]
+---The default options.
+---@type sessions.Config
+local defaults = {
+  auto_save = false,
+  directory = 'sessions', -- Will be created if not available.
+  ignored_filetypes = { 'alpha', 'dashboard', 'snacks_dashboard' },
+  notify = true,
+  overwrite = true,
 }
 ```
 
@@ -99,7 +97,7 @@ Run `:checkhealth sessions` to check the health of the plugin.
 
 ## TODO
 
-- [ ] Add lua comment [annotations](https://luals.github.io/wiki/annotations/).
+- [x] Add lua comment [annotations](https://luals.github.io/wiki/annotations/).
 - [x] Add auto save.
 - [x] Update readme.
 - [x] Move simple session management from tigion.core.util.session to a plugin.

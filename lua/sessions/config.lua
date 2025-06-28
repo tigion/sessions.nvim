@@ -2,43 +2,31 @@
 local M = {}
 
 ---@class sessions.Config
----Whether to save session automatically on Neovim exit.
----@field auto_save? boolean
----Whether to notify the user when a session is loaded or saved.
----@field notify? boolean
----The name of the subdirectory in `vim.fn.stdpath('data')`
----where the sessions are saved.
----If it does not exist, it will be created.
----@field directory? string
----Whether to overwrite existing session files without confirmation.
----@field overwrite? boolean
----Ignores session saving for the specified filetypes.
----@field ignored_filetypes? string[]
+---@field auto_save? boolean Automatically saves the session on Neovim exit.
+---@field directory? string The subdirectory in `vim.fn.stdpath('data')` where the sessions are saved.
+---@field ignored_filetypes? string[] Ignores session saving for the specified filetypes.
+---@field notify? boolean Notifies when a session is loaded or saved.
+---@field overwrite? boolean Overwrites existing session files without confirmation.
 
+---The default options.
 ---@type sessions.Config
 local defaults = {
   auto_save = false,
-  notify = true,
-  directory = 'sessions',
-  overwrite = true,
+  directory = 'sessions', -- Will be created if not available.
   ignored_filetypes = { 'alpha', 'dashboard', 'snacks_dashboard' },
+  notify = true,
+  overwrite = true,
 }
 
--- NOTE: Sets the default options without the setup function.
---       A deep copy of the defaults is needed to avoid modifying the defaults.
---       - M.options = defaults
---       - M.options = vim.deepcopy(defaults, true)
-
----The configuration options for the plugin.
+---The current options. Uses defaults without setup.
 ---@type sessions.Config
 M.options = vim.deepcopy(defaults, true)
 
----Setups the plugin with the user-provided options.
----@param opts sessions.Config
+---Setups the plugin configuration.
+---@param opts sessions.Config The user options.
 function M.setup(opts)
+  -- Merges the default options with the user options.
   M.options = vim.tbl_deep_extend('force', defaults, opts or {})
-
-  -- TODO: check config values
 end
 
 return M

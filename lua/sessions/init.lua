@@ -4,9 +4,7 @@ local notify = require('sessions.notify')
 
 local M = {}
 
--- M.setup = config.setup
--- M.setup = require('sessions.config').setup
-
+---Setups the plugin.
 ---@param opts sessions.Config
 function M.setup(opts)
   -- check neovim version
@@ -15,10 +13,10 @@ function M.setup(opts)
     return
   end
 
-  -- Setups the config.
+  -- Setups the plugin configuration.
   require('sessions.config').setup(opts)
 
-  -- Creates the `Session` command.
+  -- Creates the `Session` commands.
   --
   -- NOTE: - `:h nvim_create_user_command`
   --       - https://tui.ninja/neovim/customizing/user_commands/creating/
