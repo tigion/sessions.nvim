@@ -34,7 +34,7 @@ function M.exists() return vim.fn.filereadable(M.filepath()) == 1 and true or fa
 local function is_ignored_filetype()
   local filetypes = util.get_window_filetypes()
   for _, ft in ipairs(filetypes) do
-    if vim.list_contains(config.options.ignored_filetypes, ft) then return true end
+    if config.options.ignored_filetypes[ft] then return true end
   end
   return false
 end
