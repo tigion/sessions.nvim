@@ -1,3 +1,4 @@
+---@class sessions.util
 local M = {}
 
 ---Returns a directory path as a filename.

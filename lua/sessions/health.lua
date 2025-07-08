@@ -1,5 +1,6 @@
 local session = require('sessions.session')
 
+---@class sessions.health
 local M = {}
 
 -- stylua: ignore start

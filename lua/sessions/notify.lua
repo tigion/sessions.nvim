@@ -1,3 +1,4 @@
+---@class sessions.notify
 local M = {}
 
 ---Displays a notification to the user.

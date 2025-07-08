@@ -2,6 +2,7 @@ local config = require('sessions.config')
 local session = require('sessions.session')
 local notify = require('sessions.notify')
 
+---@class sessions
 local M = {}
 
 ---Setups the plugin.
