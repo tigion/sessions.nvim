@@ -13,16 +13,16 @@ local error = vim.health.error -- Reports an error.
 
 ---Checks the data directory.
 local function check_data_directory()
-  local data_dir = vim.fn.stdpath('data') .. '' -- add `.. ''` to prevent  Lua Diagnostics `string|string[]` warning
+  local data_dir = vim.fn.stdpath('data')
   local message = 'Data directory `' .. data_dir .. '`'
 
-  -- check if exists
+  -- Checks if it exists.
   if vim.fn.isdirectory(data_dir) ~= 1 then
     error(message .. ' does not exist')
     return
   end
 
-  -- check if writable
+  -- Checks if it is writable.
   if vim.fn.filewritable(data_dir) == 2 then
     ok(message .. ' is writable')
   else
@@ -35,13 +35,13 @@ local function check_session_directory()
   local session_dir = session.directory()
   local message = 'Session directory `' .. session_dir .. '`'
 
-  -- check if exists
+  -- Checks if it exists.
   if vim.fn.isdirectory(session_dir) ~= 1 then
     warn(message .. ' does not exist' .. '\n' .. 'This is normal if no sessions have been saved yet.')
     return
   end
 
-  -- check if writable
+  -- Checks if it is writable.
   if vim.fn.filewritable(session_dir) == 2 then
     ok(message .. ' is writable')
   else
@@ -50,22 +50,22 @@ local function check_session_directory()
 end
 
 ---Checks the session files.
-local function info_sessions()
+local function check_sessions()
   local session_dir = session.directory()
   local expr = '*.session.vim'
 
-  -- get count of session files
+  -- Shows the count of session files.
   local session_files = vim.fn.globpath(session_dir, expr, true, true)
   local count = #session_files
   info('Session files: ' .. count)
 end
 
 ---Checks the session file for the current working directory.
-local function info_session()
+local function check_current_session()
   local session_filepath = session.filepath()
   local filename = vim.fs.basename(session_filepath)
 
-  -- check if session file exists and is readable
+  -- Shows if the session file exists.
   if vim.fn.filereadable(session_filepath) == 1 then
     info('Session file `' .. filename .. '` for current working directory exists')
   else
@@ -78,8 +78,8 @@ function M.check()
   start('nvim-sessions')
   check_data_directory()
   check_session_directory()
-  info_sessions()
-  info_session()
+  check_sessions()
+  check_current_session()
 end
 
 return M

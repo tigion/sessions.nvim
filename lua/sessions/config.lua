@@ -4,8 +4,9 @@ local M = {}
 ---@class sessions.Config
 ---@field auto_save? boolean Automatically saves the session on Neovim exit.
 ---@field directory? string The subdirectory in `vim.fn.stdpath('data')` where the sessions are saved.
+---@field ignore_blank? boolean Ignores saving sessions for blank buffers.
 ---@field ignored_filetypes? table<string, boolean> Ignores session saving for the specified filetypes.
----@field notify? boolean Notifies when a session is loaded or saved.
+---@field notify? boolean Notifies when a session is loaded, saved or deleted.
 ---@field overwrite? boolean Overwrites existing session files without confirmation.
 
 ---The default options.
@@ -13,7 +14,8 @@ local M = {}
 local defaults = {
   auto_save = false,
   directory = 'sessions', -- Will be created if not available.
-  ignored_filetypes = {
+  ignore_blank = true,
+  ignored_filetypes = { -- Will prevent session saving if found.
     alpha = true,
     dashboard = true,
     snacks_dashboard = true,
