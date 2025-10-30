@@ -75,7 +75,7 @@ end
 
 ---Checks the health of the plugin.
 function M.check()
-  start('nvim-sessions')
+  start('sessions.nvim')
   check_data_directory()
   check_session_directory()
   check_sessions()

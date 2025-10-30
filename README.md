@@ -1,4 +1,4 @@
-# nvim-sessions
+# sessions.nvim
 
 A simple session management plugin for Neovim. It uses
 [`:mksession`][mksession] to save and [`:source`][source] to load working
@@ -10,6 +10,8 @@ directory based sessions.
 
 > [!WARNING]
 > This plugin is based on my personal needs. Work in progress. 🚀
+>
+> The former name of this plugin was `nvim-sessions`.
 
 Other better plugins are:
 
@@ -46,7 +48,7 @@ Other better plugins are:
 
 ```lua
 return {
-  'tigion/nvim-sessions',
+  'tigion/sessions.nvim',
   event = 'VeryLazy',
   cmd = 'Session',
   keys = {

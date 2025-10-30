@@ -37,7 +37,7 @@ end
 
 ---Creates the needed autocommands.
 local function create_auto_commands()
-  local group = vim.api.nvim_create_augroup('nvim-sessions_group', {})
+  local group = vim.api.nvim_create_augroup('sessions-nvim_group', {})
 
   -- Creates autocommand to save session on Neovim exit if auto_save is enabled.
   if config.options.auto_save == true then
@@ -53,7 +53,7 @@ end
 function M.setup(opts)
   -- check neovim version
   if vim.fn.has('nvim-0.10') == 0 then
-    notify.error('nvim-sessions requires Neovim >= 0.10')
+    notify.error('sessions.nvim requires Neovim >= 0.10')
     return
   end
 
