@@ -24,9 +24,9 @@ Other better plugins are:
 ## Features
 
 - Uses **one** session file per **working directory**.
-- Session files are stored **global** in `vim.fn.stdpath('data')` in
+- Session files are stored **globally** in `vim.fn.stdpath('data')` in
   a configurable subdirectory.
-- Sessions can **manually** saved, loaded and deleted.
+- Sessions can be **manually** saved, loaded and deleted.
 - Optionally, the session is automatically saved when Neovim is closed.
 - It ignores empty windows from plugins like nvim-tree or outline<br />
   (removes temporary `blank` from the `:h sessionoptions`). Can be configured
@@ -89,7 +89,7 @@ The default options are:
 ---@field directory? string The subdirectory in `vim.fn.stdpath('data')` where the sessions are saved.
 ---@field ignore_blank? boolean Ignores saving sessions for blank buffers.
 ---@field ignored_filetypes? table<string, boolean> Ignores session saving for the specified filetypes.
----@field notify? boolean Notifies when a session is loaded or saved.
+---@field notify? boolean Notifies when a session is loaded, saved or deleted.
 ---@field overwrite? boolean Overwrites existing session files without confirmation.
 
 ---The default options.
