@@ -61,6 +61,24 @@ return {
 }
 ```
 
+### vim.pack (nvim 0.12+)
+
+```lua
+vim.pack.add({
+  'https://github.com/tigion/sessions.nvim',
+  -- { src = 'https://github.com/tigion/sessions.nvim', version = 'main' },
+})
+
+-- Use `setup()` for your own user configuration in the `{}` table.
+require('sessions').setup({
+  -- Your config here.
+})
+
+-- Add keymaps for session management.
+vim.keymap.set('n', '<Leader>ws', '<Cmd>Session save<CR>', { desc = 'Save session (cwd)' })
+vim.keymap.set('n', '<Leader>wl', '<Cmd>Session load<CR>', { desc = 'Load session (cwd)' })
+```
+
 ## Configuration
 
 The default options are:
