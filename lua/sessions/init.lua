@@ -49,7 +49,7 @@ local function create_auto_commands()
 end
 
 ---Sets up the plugin.
----@param opts sessions.Config
+---@param opts? sessions.Config
 function M.setup(opts)
   -- check neovim version
   if vim.fn.has('nvim-0.10') == 0 then
