@@ -1,20 +1,30 @@
 ---@class sessions.util
 local M = {}
 
----Returns a directory path as a filename.
+---Returns a filename-friendly string based on the given path.
 --
 -- Example:
 -- - `/Kong/foo/bar` -> `Kong_foo_bar`
 -- - `C:\Kong\foo\bar` -> `C_Kong_foo_bar`
 --
----@param dir string
+---@param path string
 ---@return string
-function M.get_dir_as_filename(dir)
-  -- trim leading and trailing slashes (back slashes)
-  local filename = dir:gsub('^[/\\]+', ''):gsub('[/\\]+$', '')
-  -- replace `/:\` (also multiple) with an underscore
+local function get_path_as_filename(path)
+  -- Trim leading and trailing slashes (back slashes).
+  local filename = path:gsub('^[/\\]+', ''):gsub('[/\\]+$', '')
+  -- Replace `/:\` (also multiple) with an underscore.
   filename = filename:gsub('[:/\\]+', '_')
   return filename
+end
+
+---Returns a session name based on the given path
+---with a hash suffix to avoid name collisions.
+---@param path string
+---@return string
+function M.get_session_name(path)
+  local hash = vim.fn.sha256(path):sub(1, 10)
+  local filename = get_path_as_filename(path)
+  return filename .. '_' .. hash
 end
 
 ---Returns the file types of viewable buffers in valid windows.
