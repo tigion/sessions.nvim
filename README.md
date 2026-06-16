@@ -42,26 +42,9 @@ Other better plugins are:
 
 ## Installation
 
-### [lazy.nvim]
+### [vim.pack] (nvim 0.12+)
 
-[lazy.nvim]: https://github.com/folke/lazy.nvim
-
-```lua
-return {
-  'tigion/sessions.nvim',
-  event = 'VeryLazy',
-  cmd = 'Session',
-  keys = {
-    { '<Leader>ws', '<Cmd>Session save<CR>', desc = 'Save session (cwd)' },
-    { '<Leader>wl', '<Cmd>Session load<CR>', desc = 'Load session (cwd)' },
-  },
-  ---@module 'sessions'
-  ---@type sessions.Config
-  opts = {},
-}
-```
-
-### vim.pack (nvim 0.12+)
+[vim.pack]: https://neovim.io/doc/user/pack/#vim.pack
 
 ```lua
 vim.pack.add({
@@ -77,6 +60,26 @@ require('sessions').setup({
 -- Add keymaps for session management.
 vim.keymap.set('n', '<Leader>ws', '<Cmd>Session save<CR>', { desc = 'Save session (cwd)' })
 vim.keymap.set('n', '<Leader>wl', '<Cmd>Session load<CR>', { desc = 'Load session (cwd)' })
+```
+
+### [lazy.nvim]
+
+[lazy.nvim]: https://github.com/folke/lazy.nvim
+
+```lua
+return {
+  'tigion/sessions.nvim',
+  cmd = 'Session',
+  keys = {
+    { '<Leader>ws', '<Cmd>Session save<CR>', desc = 'Save session (cwd)' },
+    { '<Leader>wl', '<Cmd>Session load<CR>', desc = 'Load session (cwd)' },
+  },
+  ---@module 'sessions'
+  ---@type sessions.Config
+  opts = {
+    -- Your config here.
+  },
+}
 ```
 
 ## Configuration
