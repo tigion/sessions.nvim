@@ -31,8 +31,8 @@ M.options = vim.deepcopy(defaults, true)
 ---Sets up the plugin configuration.
 ---@param opts? sessions.Config The user options.
 function M.setup(opts)
-  -- Merges the default options with the user options.
-  M.options = vim.tbl_deep_extend('force', defaults, opts or {})
+  -- Merge default options with the user-provided options.
+  M.options = vim.tbl_deep_extend('force', vim.deepcopy(defaults), opts or {})
 end
 
 return M
