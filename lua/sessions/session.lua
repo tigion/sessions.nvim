@@ -25,9 +25,10 @@ end
 ---@return string
 function M.filepath() return M.directory() .. '/' .. M.filename() end
 
----Checks if the session file for the current working directory exists.
+---Checks if the session file for the current working directory
+---exists and is readable.
 ---@return boolean
-function M.exists() return vim.fn.filereadable(M.filepath()) == 1 end
+function M.exists() return util.is_readable_file(M.filepath()) end
 
 ---Checks if an ignored file type is found.
 ---@return boolean, string|nil -- Returns true and the filetype if an ignored filetype is found, otherwise false.
@@ -77,18 +78,19 @@ function M.save()
   end
 
   local session_dir = M.directory()
-  local session_filepath = M.filepath()
 
   -- Checks session directory and creates it if it doesn't exist.
-  if vim.fn.isdirectory(session_dir) == 0 and not vim.fn.mkdir(session_dir, 'p') then
+  if util.is_directory(session_dir) and not vim.fn.mkdir(session_dir, 'p') then
     -- Session directory doesn't exist and couldn't be created.
     notify.error('Failed to create session.\nSession directory is not creatable.\n' .. text.health)
     return
-  elseif vim.fn.filewritable(session_dir) ~= 2 then
+  elseif not util.is_writable_directory(session_dir) then
     -- Session directory isn't writable.
     notify.error('Failed to create session.\nSession directory is not writable.\n' .. text.health)
     return
   end
+
+  local session_filepath = M.filepath()
 
   -- Creates the session file and checks if it can be overwritten.
   if not config.options.overwrite and M.exists() then
@@ -106,13 +108,12 @@ end
 
 ---Loads the session for the current working directory.
 function M.load()
-  local filepath = M.filepath()
   if not M.exists() then
     notify.warn('No session to load.')
     return
   end
 
-  vim.cmd.source(filepath)
+  vim.cmd.source(M.filepath())
   if config.options.notify then notify.info('Session is loaded.') end
 end
 
@@ -123,8 +124,7 @@ function M.delete()
     return
   end
 
-  local filepath = M.filepath()
-  if vim.fn.delete(filepath) == 0 then
+  if vim.fn.delete(M.filepath()) == 0 then
     if config.options.notify then notify.info('Session is deleted.') end
   else
     notify.error('Failed to delete session.\n' .. text.health)

@@ -50,4 +50,32 @@ function M.get_buffer_filetypes()
   return vim.tbl_map(function(buf) return vim.bo[buf].filetype end, valid_bufs)
 end
 
+---Checks if the given path is a directory.
+---@param path string
+---@return boolean
+function M.is_directory(path) return vim.fn.isdirectory(path) == 1 end
+
+---Checks if the given path is a readable directory.
+---@param path string
+---@return boolean
+function M.is_writable_directory(path) return vim.fn.filewritable(path) == 2 end
+
+---Checks if the given filepath is a file.
+---@param filepath string
+---@return boolean
+function M.is_file(filepath)
+  local stat = vim.uv.fs_stat(filepath)
+  return stat and stat.type == 'file' or false
+end
+
+---Checks if the given filepath is a readable file.
+---@param filepath string
+---@return boolean
+function M.is_readable_file(filepath) return vim.fn.filereadable(filepath) == 1 end
+
+---Checks if the given filepath is a writable file.
+---@param filepath string
+---@return boolean
+function M.is_writable_file(filepath) return vim.fn.filewritable(filepath) == 1 end
+
 return M
