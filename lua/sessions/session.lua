@@ -54,11 +54,11 @@ local function create_session_file(filepath)
   end
 
   -- Creates the session file.
-  local ok, error = pcall(function() vim.cmd('mksession! ' .. vim.fn.fnameescape(filepath)) end)
+  local ok, err = pcall(function() vim.cmd('mksession! ' .. vim.fn.fnameescape(filepath)) end)
   if ok then
     if config.options.notify then notify.info('Session is saved.') end
   else
-    notify.error('mksession: ' .. (error or 'Failed to save session.') .. '\n' .. text.health)
+    notify.error('mksession: ' .. (err or 'Failed to save session.') .. '\n' .. text.health)
   end
 
   if config.options.ignore_blank then
@@ -112,7 +112,7 @@ function M.load()
     return
   end
 
-  vim.cmd('source ' .. vim.fn.fnameescape(filepath))
+  vim.cmd.source(filepath)
   if config.options.notify then notify.info('Session is loaded.') end
 end
 
