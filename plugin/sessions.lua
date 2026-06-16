@@ -4,23 +4,26 @@ if vim.fn.has('nvim-0.10') == 0 then
   return
 end
 
-local CHOICES = { 'info', 'save', 'load', 'delete' }
-
--- Create the Session command with subcommands.
 vim.api.nvim_create_user_command('Session', function(input)
   local session = require('sessions.session')
-  local actions = {
-    info = session.info,
-    save = session.save,
-    load = session.load,
-    delete = session.delete,
-  }
-  (actions[input.args] or session.usage)()
+  local subcmd = input.args
+  if subcmd == 'info' then
+    session.info()
+  elseif subcmd == 'save' then
+    session.save()
+  elseif subcmd == 'load' then
+    session.load()
+  elseif subcmd == 'delete' then
+    session.delete()
+  else
+    session.usage()
+  end
 end, {
   nargs = '?',
   complete = function(arg_lead)
-    if arg_lead == '' then return CHOICES end
-    return vim.tbl_filter(function(choice) return choice:find(arg_lead, 1, true) == 1 end, CHOICES)
+    local choices = { 'info', 'save', 'load', 'delete' }
+    if arg_lead == '' then return choices end
+    return vim.tbl_filter(function(choice) return choice:find(arg_lead, 1, true) == 1 end, choices)
   end,
-  desc = 'Session ' .. table.concat(CHOICES, '|'),
+  desc = 'Manage sessions',
 })
