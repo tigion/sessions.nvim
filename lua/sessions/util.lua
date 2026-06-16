@@ -1,29 +1,38 @@
 ---@class sessions.util
 local M = {}
 
----Returns a filename-friendly string based on the given path.
---
+---Converts a path to a filename-safe string.
+---
+---Trims leading/trailing separators and replaces path separators
+---and colons with underscores.
+---
 -- Example:
 -- - `/Kong/foo/bar` -> `Kong_foo_bar`
 -- - `C:\Kong\foo\bar` -> `C_Kong_foo_bar`
---
 ---@param path string
----@return string
-local function get_path_as_filename(path)
-  -- Trim leading and trailing slashes (back slashes).
+---@return string filename
+local function path_to_filename(path)
+  -- Trim leading/trailing path separators (`/` or `\`).
   local filename = path:gsub('^[/\\]+', ''):gsub('[/\\]+$', '')
-  -- Replace `/:\` (also multiple) with an underscore.
+  -- Replace path separators and `:` (including mixed sequences)
+  -- with a single underscore.
   filename = filename:gsub('[:/\\]+', '_')
   return filename
 end
 
----Returns a session name based on the given path
----with a hash suffix to avoid name collisions.
+---Generates a unique session name for the given path.
+---
+---Combines a filename-safe version of the path with a SHA256 hash to ensure
+---uniqueness across different paths.
+---
+-- Example:
+-- - `/Kong/foo/bar` -> `Kong_foo_bar_2f1b9ef130`
+-- - `/Kong/foo_bar` -> `Kong_foo_bar_f09ba38b95`
 ---@param path string
 ---@return string
-function M.get_session_name(path)
+function M.session_name_for_path(path)
+  local filename = path_to_filename(path)
   local hash = vim.fn.sha256(path):sub(1, 10)
-  local filename = get_path_as_filename(path)
   return filename .. '_' .. hash
 end
 

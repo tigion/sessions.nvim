@@ -17,7 +17,7 @@ function M.directory() return vim.fn.stdpath('data') .. '/' .. config.options.di
 ---Returns the filename of the session for the current working directory.
 ---@return string
 function M.filename()
-  local session_name = util.get_session_name(vim.fn.getcwd())
+  local session_name = util.session_name_for_path(vim.fn.getcwd())
   return session_name .. '.session.vim'
 end
 
