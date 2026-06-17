@@ -54,7 +54,7 @@ end
 ---@return boolean
 function M.is_directory(path) return vim.fn.isdirectory(path) == 1 end
 
---- Checks if the given path is a readable directory.
+--- Checks if the given path is a writable directory.
 ---@param path string
 ---@return boolean
 function M.is_writable_directory(path) return vim.fn.filewritable(path) == 2 end

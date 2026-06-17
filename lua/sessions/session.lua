@@ -80,7 +80,7 @@ function M.save()
   local session_dir = M.directory()
 
   -- Check session directory and create it if it doesn't exist.
-  if util.is_directory(session_dir) and not vim.fn.mkdir(session_dir, 'p') then
+  if not util.is_directory(session_dir) and not vim.fn.mkdir(session_dir, 'p') then
     -- Session directory doesn't exist and couldn't be created.
     notify.error('Failed to create session.\nSession directory is not creatable.\n' .. text.health)
     return
@@ -113,7 +113,7 @@ function M.load()
     return
   end
 
-  vim.cmd.source(M.filepath())
+  vim.cmd.source(vim.fn.fnameescape(M.filepath()))
   if config.options.notify then notify.info('Session is loaded.') end
 end
 
