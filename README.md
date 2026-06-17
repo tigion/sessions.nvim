@@ -51,12 +51,9 @@ vim.pack.add({
 ```lua
 return {
   'tigion/sessions.nvim',
-  -- cmd = 'Session',
+  cmd = 'Session',
 }
 ```
-
-The plugin handles lazy loading internally. You can optionally use `cmd` to let
-`lazy.nvim` manage loading.
 
 ## Configuration
 
@@ -83,7 +80,7 @@ configuration and `keys` for lazy-loaded keymaps:
 ```lua
 return {
   'tigion/sessions.nvim',
-  -- cmd = 'Session',
+  cmd = 'Session',
 
   keys = {
     -- Example keymaps:
