@@ -9,7 +9,7 @@ local M = {}
 ---@field notify? boolean Notifies when a session is loaded, saved or deleted.
 ---@field overwrite? boolean Overwrites existing session files without confirmation.
 
----The default options.
+--- The default options.
 ---@type sessions.Config
 local defaults = {
   auto_save = false,
@@ -24,11 +24,11 @@ local defaults = {
   overwrite = true,
 }
 
----The current options. Uses defaults without setup.
+--- The current options. Uses defaults without setup.
 ---@type sessions.Config
 M.options = vim.deepcopy(defaults, true)
 
----Sets up the plugin configuration.
+--- Sets up the plugin configuration.
 ---@param opts? sessions.Config The user options.
 function M.setup(opts)
   -- Merge default options with the user-provided options.

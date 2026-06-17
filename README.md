@@ -95,7 +95,7 @@ The default options are:
 ---@field notify? boolean Notifies when a session is loaded, saved or deleted.
 ---@field overwrite? boolean Overwrites existing session files without confirmation.
 
----The default options.
+--- The default options.
 ---@type sessions.Config
 local defaults = {
   auto_save = false,

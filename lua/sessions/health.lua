@@ -12,7 +12,7 @@ local error = vim.health.error -- Reports an error.
 ---@class sessions.health
 local M = {}
 
----Checks if a directory exists and is writable, reporting the result.
+--- Checks if a directory exists and is writable, reporting the result.
 ---@param name string
 ---@param path string
 ---@param missing_report fun(msg:string)
@@ -37,13 +37,13 @@ local function check_directory(name, path, missing_report, note)
   return true
 end
 
----Checks the data directory.
+--- Checks the data directory.
 local function check_data_directory()
   local data_dir = vim.fn.stdpath('data')
   check_directory('Data directory', data_dir, error)
 end
 
----Checks the session directory.
+--- Checks the session directory.
 ---@return boolean True if the session directory exists, false otherwise.
 local function check_session_directory()
   local session_dir = session.directory()
@@ -51,7 +51,7 @@ local function check_session_directory()
   return check_directory('Session directory', session_dir, warn, note)
 end
 
----Checks the session file for the current working directory.
+--- Checks the session file for the current working directory.
 local function check_current_session()
   local message = 'Session file for current working directory'
   local file = '\nFile: `' .. session.filename() .. '`'
@@ -71,18 +71,18 @@ local function check_current_session()
   end
 end
 
----Checks the session files.
+--- Checks the session files.
 local function check_sessions()
   local session_dir = session.directory()
   local expr = '*.session.vim'
 
-  -- Shows the count of session files.
+  -- Show the number of session files in the session directory.
   local session_files = vim.fn.globpath(session_dir, expr, true, true)
   local count = #session_files
   info('Found ' .. count .. ' session file' .. (count ~= 1 and 's' or '') .. ' in the session directory.')
 end
 
----Checks the health of the plugin.
+--- Checks the health of the plugin.
 function M.check()
   start('sessions.nvim')
   check_data_directory()

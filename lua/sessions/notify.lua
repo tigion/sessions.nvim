@@ -1,7 +1,7 @@
 ---@class sessions.notify
 local M = {}
 
----Displays a notification to the user.
+--- Displays a notification to the user.
 ---@param message string
 ---@param level? number -- vim.log.levels
 local function notify(message, level)
@@ -9,15 +9,15 @@ local function notify(message, level)
   vim.notify(message, level, { title = 'Sessions' })
 end
 
----Displays an info notification.
+--- Displays an info notification.
 ---@param message string
 function M.info(message) notify(message, vim.log.levels.INFO) end
 
----Displays a warning notification.
+--- Displays a warning notification.
 ---@param message string
 function M.warn(message) notify(message, vim.log.levels.WARN) end
 
----Displays an error notification.
+--- Displays an error notification.
 ---@param message string
 function M.error(message) notify(message, vim.log.levels.ERROR) end
 

@@ -4,6 +4,7 @@ if vim.fn.has('nvim-0.10') == 0 then
   return
 end
 
+-- Create the user command for managing sessions.
 vim.api.nvim_create_user_command('Session', function(input)
   local session = require('sessions.session')
   local subcmd = input.args

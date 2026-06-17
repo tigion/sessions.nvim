@@ -1,7 +1,7 @@
 ---@class sessions
 local M = {}
 
----Creates or removes the auto-save autocommand based on the enabled state.
+--- Creates or removes the auto-save autocommand based on the enabled state.
 ---@param enabled boolean
 local function create_auto_save_autocmd(enabled)
   local group = vim.api.nvim_create_augroup('sessions_auto_save', { clear = true })
@@ -14,7 +14,7 @@ local function create_auto_save_autocmd(enabled)
   })
 end
 
----Sets up the plugin.
+--- Sets up the plugin.
 ---@param opts? sessions.Config
 function M.setup(opts)
   local config = require('sessions.config')
