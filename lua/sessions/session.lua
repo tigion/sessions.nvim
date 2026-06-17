@@ -40,31 +40,28 @@ local function is_ignored_filetype()
   return false
 end
 
---- Creates the session file for the current working directory.
+--- Creates the session file for the current working directory
+--- by executing the `:mksession` command.
 ---@param filepath string -- The full path of the session file.
 local function create_session_file(filepath)
-  local session_opts = {}
+  local had_blank = false
+
+  -- Remove 'blank' from sessionoptions if ignore_blank is enabled and is currently set.
   if config.options.ignore_blank then
-    -- Workaround part 1/2: Ignores nvim-tree, outline or other special windows.
-    --                      Remove `blank` temporary from session options.
-    session_opts = { current = vim.opt.sessionoptions:get(), values = { 'blank' } }
-    for idx, value in ipairs(session_opts.values) do
-      if not vim.tbl_contains(session_opts.current, value) then table.remove(session_opts.values, idx) end
-    end
-    if #session_opts.values > 0 then vim.opt.sessionoptions:remove(session_opts.values) end
+    had_blank = vim.tbl_contains(vim.opt.sessionoptions:get(), 'blank')
+    if had_blank then vim.opt.sessionoptions:remove('blank') end
   end
 
-  -- Create session file.
+  -- Create the session file by executing the mksession command.
   local ok, err = pcall(function() vim.cmd({ cmd = 'mksession', bang = true, args = { filepath } }) end)
+
+  -- Restore 'blank' to sessionoptions if it was removed.
+  if had_blank then vim.opt.sessionoptions:append('blank') end
+
   if ok then
     if config.options.notify then notify.info('Session is saved.') end
   else
     notify.error('mksession: ' .. (err or 'Failed to save session.') .. '\n' .. text.health)
-  end
-
-  if config.options.ignore_blank then
-    -- Workaround part 2/2: Restores vim.opt.sessionoptions.
-    if #session_opts.values > 0 then vim.opt.sessionoptions:append(session_opts.values) end
   end
 end
 
@@ -81,11 +78,9 @@ function M.save()
 
   -- Check session directory and create it if it doesn't exist.
   if not util.is_directory(session_dir) and not vim.fn.mkdir(session_dir, 'p') then
-    -- Session directory doesn't exist and couldn't be created.
     notify.error('Failed to create session.\nSession directory is not creatable.\n' .. text.health)
     return
   elseif not util.is_writable_directory(session_dir) then
-    -- Session directory isn't writable.
     notify.error('Failed to create session.\nSession directory is not writable.\n' .. text.health)
     return
   end
