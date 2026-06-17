@@ -55,7 +55,7 @@ local function create_session_file(filepath)
   end
 
   -- Create session file.
-  local ok, err = pcall(function() vim.cmd('mksession! ' .. vim.fn.fnameescape(filepath)) end)
+  local ok, err = pcall(function() vim.cmd({ cmd = 'mksession', bang = true, args = { filepath } }) end)
   if ok then
     if config.options.notify then notify.info('Session is saved.') end
   else
@@ -113,8 +113,13 @@ function M.load()
     return
   end
 
-  vim.cmd.source(vim.fn.fnameescape(M.filepath()))
-  if config.options.notify then notify.info('Session is loaded.') end
+  -- Source the session file.
+  local ok, err = pcall(function() vim.cmd({ cmd = 'source', args = { M.filepath() } }) end)
+  if ok then
+    if config.options.notify then notify.info('Session is loaded.') end
+  else
+    notify.error('source: ' .. (err or 'Failed to source session.') .. '\n' .. text.health)
+  end
 end
 
 --- Deletes the session for the current working directory.
