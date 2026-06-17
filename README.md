@@ -11,6 +11,14 @@ working directory based sessions.
 > [!NOTE]
 > This plugin is based on my personal workflow and is still evolving. 🚀
 
+> [!WARNING]
+> 17.06.2026: The merged commit
+> [8e75111](https://github.com/tigion/sessions.nvim/commit/8e75111024acdd3081242607d89a9562d7c48e71)
+> introduced a breaking change.
+>
+> - The session files have a new format (hash based) and are not compatible
+>   with the old ones. Old session files will be ignored and can be deleted.
+
 ## Features
 
 - Uses **one** session file per **current working directory**.
