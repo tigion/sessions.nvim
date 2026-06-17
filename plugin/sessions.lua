@@ -1,6 +1,7 @@
 -- Check Neovim version.
 if vim.fn.has('nvim-0.10') == 0 then
-  vim.notify('The plugin requires Neovim >=0.10', vim.log.levels.ERROR, { title = 'Sessions' })
+  local notify = require('sessions.notify')
+  notify.error('The plugin requires Neovim >=0.10')
   return
 end
 
