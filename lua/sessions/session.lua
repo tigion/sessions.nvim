@@ -10,26 +10,27 @@ local text = {
 ---@class sessions.session
 local M = {}
 
----Returns the global directory path where session files are stored.
+--- Returns the global directory path where session files are stored.
 ---@return string
 function M.directory() return vim.fn.stdpath('data') .. '/' .. config.options.directory end
 
----Returns the filename of the session for the current working directory.
+--- Returns the filename of the session for the current working directory.
 ---@return string
 function M.filename()
-  local filename = util.get_dir_as_filename(vim.fn.getcwd())
-  return filename .. '.session.vim'
+  local session_name = util.session_name_for_path(vim.fn.getcwd())
+  return session_name .. '.session.vim'
 end
 
----Returns the full path of the session file for the current working directory.
+--- Returns the full path of the session file for the current working directory.
 ---@return string
 function M.filepath() return M.directory() .. '/' .. M.filename() end
 
----Checks if the session file for the current working directory exists.
+--- Checks if the session file for the current working directory
+--- exists and is readable.
 ---@return boolean
-function M.exists() return vim.fn.filereadable(M.filepath()) == 1 end
+function M.exists() return util.is_readable_file(M.filepath()) end
 
----Checks if an ignored file type is found.
+--- Checks if an ignored file type is found.
 ---@return boolean, string|nil -- Returns true and the filetype if an ignored filetype is found, otherwise false.
 local function is_ignored_filetype()
   local filetypes = util.get_window_filetypes()
@@ -39,7 +40,7 @@ local function is_ignored_filetype()
   return false
 end
 
----Creates the session file for the current working directory.
+--- Creates the session file for the current working directory.
 ---@param filepath string -- The full path of the session file.
 local function create_session_file(filepath)
   local session_opts = {}
@@ -53,12 +54,12 @@ local function create_session_file(filepath)
     if #session_opts.values > 0 then vim.opt.sessionoptions:remove(session_opts.values) end
   end
 
-  -- Creates the session file.
-  local ok, error = pcall(function() vim.cmd('mksession! ' .. vim.fn.fnameescape(filepath)) end)
+  -- Create session file.
+  local ok, err = pcall(function() vim.cmd('mksession! ' .. vim.fn.fnameescape(filepath)) end)
   if ok then
     if config.options.notify then notify.info('Session is saved.') end
   else
-    notify.error('mksession: ' .. (error or 'Failed to save session.') .. '\n' .. text.health)
+    notify.error('mksession: ' .. (err or 'Failed to save session.') .. '\n' .. text.health)
   end
 
   if config.options.ignore_blank then
@@ -67,7 +68,7 @@ local function create_session_file(filepath)
   end
 end
 
----Saves the session.
+--- Saves the session for the current working directory.
 function M.save()
   -- Don't save session if there is an ignored filetype.
   local is_ignored, filetype = is_ignored_filetype()
@@ -77,20 +78,21 @@ function M.save()
   end
 
   local session_dir = M.directory()
-  local session_filepath = M.filepath()
 
-  -- Checks session directory and creates it if it doesn't exist.
-  if vim.fn.isdirectory(session_dir) == 0 and not vim.fn.mkdir(session_dir, 'p') then
+  -- Check session directory and create it if it doesn't exist.
+  if not util.is_directory(session_dir) and not vim.fn.mkdir(session_dir, 'p') then
     -- Session directory doesn't exist and couldn't be created.
     notify.error('Failed to create session.\nSession directory is not creatable.\n' .. text.health)
     return
-  elseif vim.fn.filewritable(session_dir) ~= 2 then
+  elseif not util.is_writable_directory(session_dir) then
     -- Session directory isn't writable.
     notify.error('Failed to create session.\nSession directory is not writable.\n' .. text.health)
     return
   end
 
-  -- Creates the session file and checks if it can be overwritten.
+  local session_filepath = M.filepath()
+
+  -- Create the session file and check if it can be overwritten.
   if not config.options.overwrite and M.exists() then
     vim.ui.input({ prompt = 'Overwrite existing session? (y/N): ' }, function(input)
       if not input or input ~= 'y' then
@@ -104,37 +106,35 @@ function M.save()
   end
 end
 
----Loads the session for the current working directory.
+--- Loads the session for the current working directory.
 function M.load()
-  local filepath = M.filepath()
   if not M.exists() then
     notify.warn('No session to load.')
     return
   end
 
-  vim.cmd('source ' .. vim.fn.fnameescape(filepath))
+  vim.cmd.source(vim.fn.fnameescape(M.filepath()))
   if config.options.notify then notify.info('Session is loaded.') end
 end
 
----Deletes the session for the current working directory.
+--- Deletes the session for the current working directory.
 function M.delete()
   if not M.exists() then
     notify.warn('No session to delete.')
     return
   end
 
-  local filepath = M.filepath()
-  if vim.fn.delete(filepath) == 0 then
+  if vim.fn.delete(M.filepath()) == 0 then
     if config.options.notify then notify.info('Session is deleted.') end
   else
     notify.error('Failed to delete session.\n' .. text.health)
   end
 end
 
----Shows info about the session for the current working directory and the usage.
+--- Shows info about the session for the current working directory and the usage.
 function M.info() notify.info((M.exists() and 'A' or 'No') .. ' saved session exists.\n' .. text.usage) end
 
----Shows the usage.
+--- Shows the usage.
 function M.usage() notify.warn(text.usage) end
 
 return M
