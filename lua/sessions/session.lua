@@ -91,7 +91,7 @@ function M.save()
   if not config.options.overwrite and M.exists() then
     vim.ui.input({ prompt = 'Overwrite existing session? (y/N): ' }, function(input)
       if not input or input ~= 'y' then
-        if config.options.notify then notify.info('Session not saved') end
+        if config.options.notify then notify.info('Session not saved.') end
         return
       end
       create_session_file(session_filepath)
@@ -132,7 +132,16 @@ function M.delete()
 end
 
 --- Shows info about the session for the current working directory and the usage.
-function M.info() notify.info((M.exists() and 'A' or 'No') .. ' saved session exists.\n' .. text.usage) end
+function M.info()
+  if not M.exists() then
+    notify.info('No saved session exists.\n' .. text.usage)
+    return
+  end
+
+  notify.info(
+    'A saved session exists.\n' .. 'Path: ' .. M.directory() .. '\n' .. 'File: ' .. M.filename() .. '\n' .. text.usage
+  )
+end
 
 --- Shows the usage.
 function M.usage() notify.warn(text.usage) end
