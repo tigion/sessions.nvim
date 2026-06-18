@@ -9,6 +9,8 @@ local M = {}
 --- Example:
 --- - `/Kong/foo/bar` -> `Kong_foo_bar`
 --- - `C:\Kong\foo\bar` -> `C_Kong_foo_bar`
+---
+--- Root-only paths (`/`, `\\`) result in an empty filename.
 ---@param path string
 ---@return string filename
 local function path_to_filename(path)
@@ -27,6 +29,10 @@ end
 --- Example:
 --- - `/Kong/foo/bar` -> `Kong_foo_bar_2f1b9ef130`
 --- - `/Kong/foo_bar` -> `Kong_foo_bar_f09ba38b95`
+--- - `/`             -> `_e3b0c44298`
+---
+--- Empty or root-only paths will result in an underscore followed by the hash,
+--- ensuring a valid filename.
 ---@param path string
 ---@return string
 function M.session_name_for_path(path)
@@ -52,7 +58,10 @@ end
 --- Checks if the given path is a directory.
 ---@param path string
 ---@return boolean
-function M.is_directory(path) return vim.fn.isdirectory(path) == 1 end
+function M.is_directory(path)
+  local stat = vim.uv.fs_stat(path)
+  return stat ~= nil and stat.type == 'directory'
+end
 
 --- Checks if the given path is a writable directory.
 ---@param path string
@@ -64,7 +73,7 @@ function M.is_writable_directory(path) return vim.fn.filewritable(path) == 2 end
 ---@return boolean
 function M.is_file(filepath)
   local stat = vim.uv.fs_stat(filepath)
-  return stat and stat.type == 'file' or false
+  return stat ~= nil and stat.type == 'file'
 end
 
 --- Checks if the given filepath is a readable file.
