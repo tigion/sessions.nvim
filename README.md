@@ -26,6 +26,7 @@ working directory based sessions.
   `vim.fn.stdpath('data')` (default: `sessions`).
 - Sessions can be **manually** saved, loaded, and deleted.
 - Optionally, sessions are automatically saved when Neovim exits.
+  This implies `overwrite = true` and ignores the `overwrite` option.
 - Ignores empty windows from plugins like nvim-tree or outline<br />
   (removes the temporary `blank` option from `:h sessionoptions`). This can be
   configured in the options.

@@ -33,6 +33,9 @@ M.options = vim.deepcopy(defaults, true)
 function M.setup(opts)
   -- Merge default options with the user-provided options.
   M.options = vim.tbl_deep_extend('force', vim.deepcopy(defaults), opts or {})
+
+  -- auto_save implies overwrite
+  if M.options.auto_save and not M.options.overwrite then M.options.overwrite = true end
 end
 
 return M
